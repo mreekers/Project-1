@@ -10,15 +10,9 @@
     <div>
       <div>
         <h3>Location:</h3>
-        <a href="/yelp?id=<%= yelp.ID %>">
+        <a href="search?id=<%= yelp.ID %>">
           <%= location.Name %>
         </a>
-     </div>
-     <div>
-       <h3>Plot:</h3>
-       <p>
-        <%= location.Info %>
-       </p>
      </div>
     </div>
   <% }); %>

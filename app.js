@@ -26,10 +26,10 @@ app.use(session({
 // Request API access: http://www.yelp.com/developers/getting_started/api_access 
  
 var yelp = require("yelp").createClient({
-  consumer_key: "consumer-key", 
-  consumer_secret: "consumer-secret",
-  token: "token",
-  token_secret: "token-secret"
+  consumer_key: "E9ROHR4zeUuaoURLmSMuvg", 
+  consumer_secret: "Wy5q8Q0UVWBpWhwqVtUUstVUieA",
+  token: "_Vkq0jrAWCoXOE0otP_vAfCQGwNTw7hy",
+  token_secret: "j7umhpK-fM4-HwNwhvppWRdE0Fk"
 });
  
 // See http://www.yelp.com/developers/documentation/v2/search_api 
@@ -52,7 +52,7 @@ app.get('/search',function(req,res){
   if (!micSearch) {
     res.render("search", {mics: [], noMics: true});
   } else {
-    var url = "http://api.yelp.com/v2/business/{id}="+micSearch;
+    var url = "http://api.yelp.com/v2/search?term="+micSearch;
 
     request(url, function(err, resp, body){
       console.log("I'm in here 2");
@@ -67,6 +67,21 @@ app.get('/search',function(req,res){
     });
   }
 });
+
+app.get('/location', function(req,res){
+  var micID = req.query.id;
+
+  var url = 'http://api.yelp.com/v2/business/{id}'+micID;
+  request(url, function (err, resp, body){
+    if (!err && resp.statusCode === 200) {
+      var micData = JSON.parse(body);
+      res.render("location", {mic: micData});  
+    }
+  });
+});
+
+
+
 
 // We have our location route that renders our location view
 app.get('/location', function(req,res) {
