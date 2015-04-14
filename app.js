@@ -6,8 +6,11 @@ var express = require('express');
    methodOverride = require('method-override'),
    pg = require("pg"),
    app = express();
+   request = require('request'),
+
 
 app.set('view engine', 'ejs');
+
 app.use(bodyParser.urlencoded({extended: true}));
 
 
@@ -18,17 +21,59 @@ app.use(session({
     saveUninitialized: true
 }));
 
-// app.get('/articles', function(req,res) {
-//     db.Article.all().then(function(dbArticle) {
-//         res.render('article/index', {articlesList: dbArticles})
-//     });
-//   console.log("GET /articles");
-//   res.send("Set up a response for this route!");
-// });
+//yelp API code
 
-//***NEW CODE FOR AUTHENTICATION***
+// Request API access: http://www.yelp.com/developers/getting_started/api_access 
+ 
+var yelp = require("yelp").createClient({
+  consumer_key: "consumer-key", 
+  consumer_secret: "consumer-secret",
+  token: "token",
+  token_secret: "token-secret"
+});
+ 
+// See http://www.yelp.com/developers/documentation/v2/search_api 
+yelp.search({term: "open mic", location: "san francisco"}, function(error, data) {
+  console.log(error);
+  console.log(data);
+});
+ 
+// See http://www.yelp.com/developers/documentation/v2/business 
+yelp.business("yelp-san-francisco", function(error, data) {
+  console.log(error);
+  console.log(data);
+});
 
-// *** PART 1 - SETUP
+//Part 2 - API functionality
+
+
+app.get('/search',function(req,res){
+  var micSearch = req.query.mics;
+  if (!micSearch) {
+    res.render("search", {mics: [], noMics: true});
+  } else {
+    var url = "http://api.yelp.com/v2/business/{id}="+micSearch;
+
+    request(url, function(err, resp, body){
+      console.log("I'm in here 2");
+      if (!err && resp.statusCode === 200) {
+        console.log("I'm in here 3");
+        var jsonData = JSON.parse(body);
+        if (!jsonData.Search) {
+          res.render("search", {mics: [], noMics: true});
+        }
+        res.render("search", {mics: jsonData.Search, noMics: false});
+      }
+    });
+  }
+});
+
+// We have our location route that renders our location view
+app.get('/location', function(req,res) {
+  res.render('location', {location: {Name: "Club Here"}});
+});
+
+//**PART 1 - INITIAL SETUP - LOGIN / SIGNUP / PROFILE PAGES
 
 app.use("/", function (req, res, next) {
     req.login = function (user) {
@@ -51,18 +96,23 @@ app.use("/", function (req, res, next) {
     };
     // this will request the logout of the session for the user
     req.logout = function() {
-        req.session.userId = null;
+        req.session.userId = null; 
         req.user = null;
     }
 
     next();
 });
 
+app.get("/", function (req, res) {
+  res.render("index");
+})
+
 // have to get the signup route and let user know it is coming soon
 app.get("/signup", function (req, res) {
     res.render("signup");
 });
 
+// want to create secure users with emails and passwords on the signup page and redirect to their profile page 
 app.post('/signup', function (req, res) {
   var user = req.body.user;
     db.User.createSecure(user.email, user.password)
@@ -71,12 +121,12 @@ app.post('/signup', function (req, res) {
      });
 });
 
-
+//simply to render login.ejs
 app.get("/login", function (req, res) {
     res.render("login");
 });
 
-//where the form goes
+//going to authenticate users via their email and password in the secure database and route them to their profile page 
 
 app.post("/login", function (req, res) {
    var user = req.body.user;
@@ -89,14 +139,13 @@ app.post("/login", function (req, res) {
    });
 });
 
-
+//profile page, eventually want the search function for the external API to go in here or maybe have it route to another page to use 
 app.get("/profile", function (req, res) {
     req.currentUser().
         then(function (user) {
             res.render("profile.ejs", {user: user});
         })
 });
-
 
 
 app.listen(3000, function () {

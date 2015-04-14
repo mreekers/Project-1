@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>search page</title>
+</head>
+<body>
+	  <h1> Mics: </h1>
+    <% mics.forEach(function(mic) { %>
+    <div>
+      <div>
+        <h3>Location:</h3>
+        <a href="/yelp?id=<%= yelp.ID %>">
+          <%= location.Name %>
+        </a>
+     </div>
+     <div>
+       <h3>Plot:</h3>
+       <p>
+        <%= location.Info %>
+       </p>
+     </div>
+    </div>
+  <% }); %>
+  <form method="GET" action="/search">
+    <input type="text" name="mics" placeholder="Search">
+    <button>Click Me.</button>
+  </form>
+</body>
+</html>
+

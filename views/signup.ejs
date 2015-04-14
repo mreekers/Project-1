@@ -5,14 +5,18 @@
 	<title>Document</title>
 </head>
 <body>
-<form method="post" action="/signup">
+  <h1>Sign up for awesomeness here</h1>
+<form method="post" action="/signup"> 
   <div>
     <input type="text" name="user[email]">
   </div>
   <div>
-    <input type="text" name="user[password]">
+    <input type="password" name="user[password]">
   </div>
   <button>Sign Up</button>
 </form>
 </body>
 </html>
+
+<!-- had a problem here w/ the action="/login" and should've been /signup, now users can sign up correctly 
+	be sure to check for correct routing paths whenever similar errors come up 
