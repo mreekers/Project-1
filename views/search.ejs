@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>search page</title>
+    <meta charset="UTF-8">
+    <title>Search</title>
 </head>
 <body>
-	  <h1> Mics: </h1>
-    <% mics.forEach(function(mic) { %>
-    <div>
-      <div>
-        <h3>Location:</h3>
-        <a href="search?id=<%= yelp.ID %>">
-          <%= location.Name %>
-        </a>
-     </div>
-    </div>
-  <% }); %>
-  <form method="GET" action="/search">
-    <input type="text" name="mics" placeholder="Search">
-    <button>Click Me.</button>
-  </form>
+
+    <div class="container">
+       <div class="row">
+           <div class="col-xs-6 col-xs-offset-3">
+               <form class="myForm" method="GET" action="/search">
+                   <input type="text" name="comedyclub" placeholder="Mics">
+                   <input type="text" name="city" placeholder="City">
+                   <button>Search</button>
+               </form>
+
+                
+
+           </div>
+       </div>
+
+
+    <h1>List of Mics </h1>
+    <ul>
+    <% results.forEach(function(results) { %>
+        <li>
+            <%= results.name %>
+    <%    })  %>
+
 </body>
 </html>
-

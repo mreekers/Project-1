@@ -1,15 +1,21 @@
-var express = require('express');
-   bodyParser = require('body-parser'),
-   db = require("./models"),
-   session = require("express-session"),
-   ejs = require('ejs'),
-   methodOverride = require('method-override'),
-   pg = require("pg"),
-   app = express();
-   request = require('request'),
+var express = require('express'),
+    bodyParser = require('body-parser'),
+    db = require("./models"),
+    session = require("express-session"),
+    ejs = require('ejs'),
+    methodOverride = require('method-override'),
+    pg = require("pg"),
+    app = express(),
+    request = require('request');
 
-
-app.set('view engine', 'ejs');
+var yelp = require("yelp").createClient({
+    consumer_key: "E9ROHR4zeUuaoURLmSMuvg", 
+    consumer_secret: "Wy5q8Q0UVWBpWhwqVtUUstVUieA",
+    token: "_Vkq0jrAWCoXOE0otP_vAfCQGwNTw7hy",
+    token_secret: "j7umhpK-fM4-HwNwhvppWRdE0Fk"
+});
+    
+app.set('view engine', 'ejs')
 
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -23,62 +29,79 @@ app.use(session({
 
 //yelp API code
 
-// Request API access: http://www.yelp.com/developers/getting_started/api_access 
- 
-var yelp = require("yelp").createClient({
-  consumer_key: "E9ROHR4zeUuaoURLmSMuvg", 
-  consumer_secret: "Wy5q8Q0UVWBpWhwqVtUUstVUieA",
-  token: "_Vkq0jrAWCoXOE0otP_vAfCQGwNTw7hy",
-  token_secret: "j7umhpK-fM4-HwNwhvppWRdE0Fk"
-});
- 
 // See http://www.yelp.com/developers/documentation/v2/search_api 
-yelp.search({term: "open mic", location: "san francisco"}, function(error, data) {
-  console.log(error);
-  console.log(data);
-});
+// yelp.search({term: "open mic", location: "San Francisco"}, function(error, data) {
+//   console.log(error);
+//   console.log(data);
+// });
  
-// See http://www.yelp.com/developers/documentation/v2/business 
-yelp.business("yelp-san-francisco", function(error, data) {
-  console.log(error);
-  console.log(data);
-});
+// // See http://www.yelp.com/developers/documentation/v2/business 
+// yelp.business("yelp-san-francisco", function(error, data) {
+//   console.log(error);
+//   console.log(data);
+// });
 
 //Part 2 - API functionality
 
+app.get('/search', function(req, res) {
+    console.log(req.query);
+    // var comedyclubs = req.query.comedyclubs;
+    // var city = req.query.city;
 
-app.get('/search',function(req,res){
-  var micSearch = req.query.mics;
-  if (!micSearch) {
-    res.render("search", {mics: [], noMics: true});
-  } else {
-    var url = "http://api.yelp.com/v2/search?term="+micSearch;
-
-    request(url, function(err, resp, body){
-      console.log("I'm in here 2");
-      if (!err && resp.statusCode === 200) {
-        console.log("I'm in here 3");
-        var jsonData = JSON.parse(body);
-        if (!jsonData.Search) {
-          res.render("search", {mics: [], noMics: true});
-        }
-        res.render("search", {mics: jsonData.Search, noMics: false});
-      }
-    });
-  }
-});
-
-app.get('/location', function(req,res){
-  var micID = req.query.id;
-
-  var url = 'http://api.yelp.com/v2/business/{id}'+micID;
-  request(url, function (err, resp, body){
-    if (!err && resp.statusCode === 200) {
-      var micData = JSON.parse(body);
-      res.render("location", {mic: micData});  
-    }
+    // if (!comedyclubs || !city) {
+    //   res.render('search', {results: []});
+    //   console.log("Mics " + comedyclubs);
+    // } else {
+    yelp.search({term: "comedy open mic", location: "San Francisco"}, function(error, data) {
+    console.log(error);
+    console.log(data);
+    res.render('search', {results: data.businesses}); 
   });
+// }
+//     yelp.search({term: comedyclubs, location: city}, function(error, data) {
+//          console.log("This is an error " + error);
+//          console.log("This is our data " + data);
+//        res.render('/search', {results: data.businesses});
+//    });
+// }
 });
+// app.get('/search',function(req,res){
+//   var micSearch = req.query.mics;
+//   if (!micSearch) {
+//       res.render("search", {mics: [], noMics: true});
+//   } else {
+//     var url = "http://api.yelp.com/v2/search?term=comedyclubs&location="+micSearch;
+
+//     request(url, function(err, resp, body){
+//       console.log("I'm in here 2");
+//       var jsonData = JSON.parse(body);
+//       console.log(jsonData);
+//       var addresses = jsonData.response.comedyclubs
+//       console.log(addresses)
+//       res.render('location.ejs')
+//       // if (!err && resp.statusCode === 200) {
+//       //   console.log("I'm in here 3");
+//       //   var jsonData = JSON.parse(body);
+//       //   if (!jsonData.Search) {
+//       //     res.render("search", {mics: [], noMics: true});
+//       //   }
+//       //   res.render("search", {mics: jsonData.Search, noMics: false});
+//       // }
+//     });
+//   }
+// });
+
+// app.get('/location', function(req,res){
+//   var micID = req.query.id;
+
+//   var url = 'http://api.yelp.com/v2/business/{id}='+micID;
+//   request(url, function (err, resp, body){
+//     if (!err && resp.statusCode === 200) {
+//       var micData = JSON.parse(body);
+//       res.render("location", {mic: micData});  
+//     }
+//   });
+// });
 
 
 
