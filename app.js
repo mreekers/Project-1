@@ -45,17 +45,18 @@ app.use(session({
 
 app.get('/search', function(req, res) {
     console.log(req.query);
-    // var comedyclubs = req.query.comedyclubs;
-    // var city = req.query.city;
-
-    // if (!comedyclubs || !city) {
-    //   res.render('search', {results: []});
-    //   console.log("Mics " + comedyclubs);
-    // } else {
-    yelp.search({term: "comedy open mic", location: "San Francisco"}, function(error, data) {
+    
+    var city = req.query.city;
+    if (!city) {
+      res.render('search', {results: []});
+      console.log({results: data.businesses});
+    } else {
+    yelp.search({term: "open mic comedy", location:city}, function(error, data) {
     console.log(error);
     console.log(data);
     res.render('search', {results: data.businesses}); 
+    });
+  }
   });
 // }
 //     yelp.search({term: comedyclubs, location: city}, function(error, data) {
@@ -64,7 +65,7 @@ app.get('/search', function(req, res) {
 //        res.render('/search', {results: data.businesses});
 //    });
 // }
-});
+
 // app.get('/search',function(req,res){
 //   var micSearch = req.query.mics;
 //   if (!micSearch) {
