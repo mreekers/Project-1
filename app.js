@@ -57,7 +57,7 @@ app.get('/search', function(req, res) {
     res.render('search', {results: data.businesses}); 
     });
   }
-  });
+});
 // }
 //     yelp.search({term: comedyclubs, location: city}, function(error, data) {
 //          console.log("This is an error " + error);
