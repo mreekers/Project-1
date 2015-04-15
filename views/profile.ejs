@@ -2,10 +2,31 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Your Profile Page</title>
+	<title>The pr0f1l3 page l33t</title>
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
 </head>
 <body>
-	<h1>Welcome lord jabroni, may all your dreams not come true b/c then mine is more likely to</h1>
-	
+	<div class="container">
+		<div>
+			<a href="/login">Login</a>
+			<a href="/search">Search</a>
+			<a href="/signup">Sign Up</a>
+			<a href="/profile">Profile</a>
+		</div>
+		<h1>Hi</h1>
+		<form method="POST" action="/logout?_method=DELETE">
+			<button>Logout</button>
+		</form>
+
+		<ul>
+			<% name.forEach(function(name) { %>
+			<li>
+        	<%= businesses.name %>
+        </li>
+    	<% }) %>
+		</ul>
+	</div>
 </body>
 </html>

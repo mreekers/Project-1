@@ -55,6 +55,9 @@ module.exports = function (sequelize, DataTypes){
           }
 
         });
+      },
+      associate: function(models) {
+        this.hasMany(models.Favorite);
       }
 
     } // close classMethods

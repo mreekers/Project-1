@@ -186,7 +186,54 @@ app.get("/profile", function (req, res) {
         })
 });
 
+// Models code with association - Users and Favorites 
 
-app.listen(3000, function () {
+// app.get('/profile', function(req,res){
+//   req.currentUser().then(function(dbUser){
+//     if (dbUser) {
+//       db.Favorite.findAll({where: {UserId: dbUser.id}})
+//         .then(function(name){
+//           console.log("\n\n\n\n\nHELLO", name);
+//         res.render('user/profile', {ejsUser: dbUser});
+//       });
+//     } else {
+//       res.redirect('/login');
+//     }
+//   });
+// });
+
+// app.get("/favorite", function (req, res) {
+//     res.render("favorite");
+// });
+
+app.post('/favorite', function(req,res){
+  var name = req.body.name;
+  console.log("name", name);
+  db.Favorite.create(name).then(
+    function(){
+      res.redirect('/profile');
+    });
+
+  // req.currentUser().then(function(dbUser){
+  //   if (dbUser) {
+  //     dbUser.addToFavs(name).then(function(name){
+  //       res.redirect('/profile');
+  //     });
+  //   } else {
+  //     res.redirect('/login');
+  //   }
+  // });
+});
+
+
+
+app.get('/sync', function (req, res) {
+  db.sequelize.sync().then(function() {
+    res.send("Sequelize Synchronization is Complete");
+  });
+});
+
+
+app.listen(process.env.PORT || 3000, function () {
   console.log("SERVER RUNNING");
 });

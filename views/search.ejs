@@ -24,7 +24,10 @@
     <ul>
     <% results.forEach(function(results) { %>
         <li>
-            <%= results.name %>
+            <form class="favorite" method="POST" action="/favorite">
+              <h1><%= results.name %></h1>
+              <button type="submit">Favorite This Club</button>
+            </form>
     <%    })  %>
 
 </body>

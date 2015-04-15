@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Favey page</title>
+		<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container">
+		<div>
+			<a href="/login">Login</a>
+			<a href="/search">Search</a>
+			<a href="/signup">Sign Up</a>
+			<a href="/profile">Profile</a>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<form method="POST" action="/favorites">
+					<input type="text" name="name">
+					<button>Favorite</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
