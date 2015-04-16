@@ -8,6 +8,11 @@ var express = require('express'),
     app = express(),
     request = require('request');
 
+// variables for the env to hide keys
+var env = process.env;
+var api_key = env.MY_API_KEY;
+
+// yelp keys for the yelp API
 var yelp = require("yelp").createClient({
     consumer_key: "E9ROHR4zeUuaoURLmSMuvg", 
     consumer_secret: "Wy5q8Q0UVWBpWhwqVtUUstVUieA",
@@ -15,11 +20,13 @@ var yelp = require("yelp").createClient({
     token_secret: "j7umhpK-fM4-HwNwhvppWRdE0Fk"
 });
 
-var env = process.env;
     
 app.set('view engine', 'ejs')
 
 app.use(bodyParser.urlencoded({extended: true}));
+
+// forgot this when my logout button wouldn't log the user out; logout now works 
+app.use(methodOverride('_method'))
 
 
 //this defines req.session
@@ -31,23 +38,11 @@ app.use(session({
 
 //yelp API code
 
-// See http://www.yelp.com/developers/documentation/v2/search_api 
-// yelp.search({term: "open mic", location: "San Francisco"}, function(error, data) {
-//   console.log(error);
-//   console.log(data);
-// });
- 
-// // See http://www.yelp.com/developers/documentation/v2/business 
-// yelp.business("yelp-san-francisco", function(error, data) {
-//   console.log(error);
-//   console.log(data);
-// });
-
 //Part 2 - API functionality
 
 app.get('/search', function(req, res) {
     console.log(req.query);
-    
+    // will look up the city you want with the search parameters open mic comedy already inputted
     var city = req.query.city;
     if (!city) {
       res.render('search', {results: []});
@@ -55,14 +50,12 @@ app.get('/search', function(req, res) {
     yelp.search({term: "open mic comedy", location:city}, function(error, data) {
     console.log(error);
     console.log(data);
-    res.render('search', {results: data.businesses}); 
+    res.render('search', {results: data.businesses}); // data of businesses is the yelp id parameters given in terminal
     });
   }
 });
 
-// app.get("/favorite", function (req, res) {
-//     res.render("favorite");
-// });
+
 
 app.post('/favorites', function(req,res){
   var selectedName = req.body.name;

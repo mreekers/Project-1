@@ -6,13 +6,19 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 </head>
 <body>
+  <div class="navbar navbar-inverse navbar-static-top" roles="navigation">
+      <div class="container">
+          <div class="navbar-header">
+        <ul>
+          <a href="/login">Login</a>
+          <a href="/search">Search</a>
+          <a href="/signup">Sign Up</a>
+          <a href="/profile">Profile</a>
+        </ul>
+          </div>
+      </div>
+  </div>
  <div class="container">
-    <div>
-      <a href="/login">Login</a>
-      <a href="/search">Search</a>
-      <a href="/signup">Sign Up</a>
-      <a href="/profile">Profile</a>
-    </div>
   <h1>LOGIN HERE</h1>
 	<form method="post" action="/login">
   <div>
@@ -23,10 +29,5 @@
   </div>
   <button>Login</button>
 </form>
-<form>
-<h1>Hi </h1>
-    <form method="POST" action="/logout?_method=DELETE">
-      <button>Logout</button>
-    </form>
 </body>
 </html>

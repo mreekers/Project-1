@@ -8,14 +8,19 @@
 
 </head>
 <body>
-	<div class="container">
-		<div>
-			<a href="/login">Login</a>
-			<a href="/search">Search</a>
-			<a href="/signup">Sign Up</a>
-			<a href="/profile">Profile</a>
-		</div>
-		<h1>Hi</h1>
+	<div class="navbar navbar-inverse navbar-static-top" roles="navigation">
+      <div class="container">
+          <div class="navbar-header">
+        <ul>
+          <a href="/login">Login</a>
+          <a href="/search">Search</a>
+          <a href="/signup">Sign Up</a>
+          <a href="/profile">Profile</a>
+        </ul>
+          </div>
+      </div>
+  </div>
+		<h1>Your Favorite Mics</h1>
 		<form method="POST" action="/logout?_method=DELETE">
 			<button>Logout</button>
 		</form>
@@ -28,5 +33,7 @@
     	<% }) %>
 		</ul>
 	</div>
+	<h1>Go do it for the applause!</h1>
+	<iframe src="//giphy.com/embed/4dBAjZ9NUU0DK?html5=true" width="480" height="360" frameBorder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 </body>
 </html>
