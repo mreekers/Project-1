@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Search</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 </head>
 <body>
-
+<div class="container">
+    <div>
+      <a href="/login">Login</a>
+      <a href="/search">Search</a>
+      <a href="/signup">Sign Up</a>
+      <a href="/profile">Profile</a>
+    </div>
     <div class="container">
        <div class="row">
            <div class="col-xs-6 col-xs-offset-3">
@@ -13,21 +20,17 @@
                    <input type="text" name="city" placeholder="City">
                    <button>Search</button>
                </form>
-
-                
-
            </div>
        </div>
-
-
     <h1>List of Mics </h1>
     <ul>
-    <% results.forEach(function(results) { %>
+    <% results.forEach(function(result) { %>
         <li>
-            <form class="favorite" method="POST" action="/favorite">
-              <h1><%= results.name %></h1>
+            <h1><%= result.name %></h1>
+            <form class="favorite" method="POST" action="/favorites">
+              <input type="hidden" name="name" value="<%= result.name %>">
               <button type="submit">Favorite This Club</button>
-            </form>
+          </form>
     <%    })  %>
 
 </body>

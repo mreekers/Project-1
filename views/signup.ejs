@@ -3,15 +3,23 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 </head>
 <body>
-  <h1>Sign up for awesomeness here</h1>
+  <div class="container">
+    <div>
+      <a href="/login">Login</a>
+      <a href="/search">Search</a>
+      <a href="/signup">Sign Up</a>
+      <a href="/profile">Profile</a>
+    </div>
+  <h1>Sign up here</h1>
 <form method="post" action="/signup"> 
   <div>
-    <input type="text" name="user[email]">
+    <input type="text" name="user[email]" placeholder="Email">
   </div>
   <div>
-    <input type="password" name="user[password]">
+    <input type="password" name="user[password]" placeholder="Password">
   </div>
   <button>Sign Up</button>
 </form>

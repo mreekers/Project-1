@@ -14,6 +14,8 @@ var yelp = require("yelp").createClient({
     token: "_Vkq0jrAWCoXOE0otP_vAfCQGwNTw7hy",
     token_secret: "j7umhpK-fM4-HwNwhvppWRdE0Fk"
 });
+
+var env = process.env;
     
 app.set('view engine', 'ejs')
 
@@ -49,7 +51,6 @@ app.get('/search', function(req, res) {
     var city = req.query.city;
     if (!city) {
       res.render('search', {results: []});
-      console.log({results: data.businesses});
     } else {
     yelp.search({term: "open mic comedy", location:city}, function(error, data) {
     console.log(error);
@@ -57,6 +58,28 @@ app.get('/search', function(req, res) {
     res.render('search', {results: data.businesses}); 
     });
   }
+});
+
+// app.get("/favorite", function (req, res) {
+//     res.render("favorite");
+// });
+
+app.post('/favorites', function(req,res){
+  var selectedName = req.body.name;
+  db.Favorite.create({name: selectedName, UserId: req.session.userId})
+    .then(function(){
+      res.redirect('/profile');
+    });
+
+  // req.currentUser().then(function(dbUser){
+  //   if (dbUser) {
+  //     dbUser.addToFavs(name).then(function(name){
+  //       res.redirect('/profile');
+  //     });
+  //   } else {
+  //     res.redirect('/login');
+  //   }
+  // });
 });
 // }
 //     yelp.search({term: comedyclubs, location: city}, function(error, data) {
@@ -160,9 +183,21 @@ app.post('/signup', function (req, res) {
      });
 });
 
+app.delete('/logout', function(req,res){
+  req.logout();
+  res.redirect('/login');
+});
+
 //simply to render login.ejs
 app.get("/login", function (req, res) {
-    res.render("login");
+  req.currentUser().then(function(user) {
+    if (user) {
+      res.redirect('/');
+    } else {
+      res.render("login");
+    }
+  });
+    
 });
 
 //going to authenticate users via their email and password in the secure database and route them to their profile page 
@@ -174,16 +209,24 @@ app.post("/login", function (req, res) {
    authenticate(user.email, user.password).
    then(function (user) {
        req.login(user);
-       res.redirect("/profile");
+       res.redirect("/login");
    });
 });
 
 //profile page, eventually want the search function for the external API to go in here or maybe have it route to another page to use 
-app.get("/profile", function (req, res) {
-    req.currentUser().
-        then(function (user) {
-            res.render("profile.ejs", {user: user});
-        })
+
+//***
+app.get('/profile', function(req, res) {
+    req.currentUser().then(function(user) {
+        if (user) {
+            //'get' is Sequelize code
+            user.getFavorites().then(function(favorites) {
+                res.render('profile', { user: user, favorites: favorites });
+            });
+        } else {
+            res.redirect('/login');
+        }
+    });
 });
 
 // Models code with association - Users and Favorites 
@@ -202,28 +245,7 @@ app.get("/profile", function (req, res) {
 //   });
 // });
 
-// app.get("/favorite", function (req, res) {
-//     res.render("favorite");
-// });
 
-app.post('/favorite', function(req,res){
-  var name = req.body.name;
-  console.log("name", name);
-  db.Favorite.create(name).then(
-    function(){
-      res.redirect('/profile');
-    });
-
-  // req.currentUser().then(function(dbUser){
-  //   if (dbUser) {
-  //     dbUser.addToFavs(name).then(function(name){
-  //       res.redirect('/profile');
-  //     });
-  //   } else {
-  //     res.redirect('/login');
-  //   }
-  // });
-});
 
 
 
