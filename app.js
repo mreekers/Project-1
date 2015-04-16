@@ -10,14 +10,17 @@ var express = require('express'),
 
 // variables for the env to hide keys
 var env = process.env;
-var api_key = env.MY_API_KEY;
+//var api_key = env.MY_API_KEY;
 
 // yelp keys for the yelp API
+
+//console.log(x);
+
 var yelp = require("yelp").createClient({
-    consumer_key: "E9ROHR4zeUuaoURLmSMuvg", 
-    consumer_secret: "Wy5q8Q0UVWBpWhwqVtUUstVUieA",
-    token: "_Vkq0jrAWCoXOE0otP_vAfCQGwNTw7hy",
-    token_secret: "j7umhpK-fM4-HwNwhvppWRdE0Fk"
+    consumer_key: env.MY_CONSUMER_KEY, 
+    consumer_secret: env.MY_CONSUMER_SECRET,
+    token: env.MY_TOKEN,
+    token_secret: env.MY_TOKEN_SECRET
 });
 
     
@@ -55,33 +58,18 @@ app.get('/search', function(req, res) {
   }
 });
 
-
+// takes a search result on the search page and stores it in your favorites table in your profile
 
 app.post('/favorites', function(req,res){
+  // selects the body of the page for name and stores it in selectedName variable
   var selectedName = req.body.name;
-  db.Favorite.create({name: selectedName, UserId: req.session.userId})
+  db.Favorite.create({name: selectedName, UserId: req.session.userId}) //<--creates the favorite with the selectedName and userid.
     .then(function(){
       res.redirect('/profile');
     });
-
-  // req.currentUser().then(function(dbUser){
-  //   if (dbUser) {
-  //     dbUser.addToFavs(name).then(function(name){
-  //       res.redirect('/profile');
-  //     });
-  //   } else {
-  //     res.redirect('/login');
-  //   }
-  // });
 });
-// }
-//     yelp.search({term: comedyclubs, location: city}, function(error, data) {
-//          console.log("This is an error " + error);
-//          console.log("This is our data " + data);
-//        res.render('/search', {results: data.businesses});
-//    });
-// }
 
+//first attempted code - didn't use yelp search function correctly and tried to do it via omdb example with a url
 // app.get('/search',function(req,res){
 //   var micSearch = req.query.mics;
 //   if (!micSearch) {
@@ -108,28 +96,9 @@ app.post('/favorites', function(req,res){
 //   }
 // });
 
-// app.get('/location', function(req,res){
-//   var micID = req.query.id;
-
-//   var url = 'http://api.yelp.com/v2/business/{id}='+micID;
-//   request(url, function (err, resp, body){
-//     if (!err && resp.statusCode === 200) {
-//       var micData = JSON.parse(body);
-//       res.render("location", {mic: micData});  
-//     }
-//   });
-// });
-
-
-
-
-// We have our location route that renders our location view
-app.get('/location', function(req,res) {
-  res.render('location', {location: {Name: "Club Here"}});
-});
-
 //**PART 1 - INITIAL SETUP - LOGIN / SIGNUP / PROFILE PAGES
 
+// gets user id 
 app.use("/", function (req, res, next) {
     req.login = function (user) {
         req.session.userId = user.id;
@@ -158,11 +127,12 @@ app.use("/", function (req, res, next) {
     next();
 });
 
+// renders the index page 
 app.get("/", function (req, res) {
   res.render("index");
 })
 
-// have to get the signup route and let user know it is coming soon
+// signup route
 app.get("/signup", function (req, res) {
     res.render("signup");
 });
@@ -176,12 +146,13 @@ app.post('/signup', function (req, res) {
      });
 });
 
+// to log the user out
 app.delete('/logout', function(req,res){
   req.logout();
   res.redirect('/login');
 });
 
-//simply to render login.ejs
+//renders login.ejs
 app.get("/login", function (req, res) {
   req.currentUser().then(function(user) {
     if (user) {
@@ -206,9 +177,7 @@ app.post("/login", function (req, res) {
    });
 });
 
-//profile page, eventually want the search function for the external API to go in here or maybe have it route to another page to use 
-
-//***
+//renders the profile with favorites stored in the favorites model
 app.get('/profile', function(req, res) {
     req.currentUser().then(function(user) {
         if (user) {
@@ -222,24 +191,7 @@ app.get('/profile', function(req, res) {
     });
 });
 
-// Models code with association - Users and Favorites 
-
-// app.get('/profile', function(req,res){
-//   req.currentUser().then(function(dbUser){
-//     if (dbUser) {
-//       db.Favorite.findAll({where: {UserId: dbUser.id}})
-//         .then(function(name){
-//           console.log("\n\n\n\n\nHELLO", name);
-//         res.render('user/profile', {ejsUser: dbUser});
-//       });
-//     } else {
-//       res.redirect('/login');
-//     }
-//   });
-// });
-
-
-
+// Sequelize sync code for association
 
 
 app.get('/sync', function (req, res) {
