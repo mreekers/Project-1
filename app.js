@@ -1,6 +1,8 @@
-var express = require('express'),
-    bodyParser = require('body-parser'),
-    db = require("./models"),
+
+var express = require('express');
+
+var bodyParser = require('body-parser');
+var db = require("./models"),
     session = require("express-session"),
     ejs = require('ejs'),
     methodOverride = require('method-override'),
@@ -17,10 +19,10 @@ var env = process.env;
 //console.log(x);
 
 var yelp = require("yelp").createClient({
-    consumer_key: env.MY_CONSUMER_KEY, 
-    consumer_secret: env.MY_CONSUMER_SECRET,
-    token: env.MY_TOKEN,
-    token_secret: env.MY_TOKEN_SECRET
+    consumer_key: "E9ROHR4zeUuaoURLmSMuvg", 
+    consumer_secret: "Wy5q8Q0UVWBpWhwqVtUUstVUieA",
+    token: "_Vkq0jrAWCoXOE0otP_vAfCQGwNTw7hy",
+    token_secret: "j7umhpK-fM4-HwNwhvppWRdE0Fk"
 });
 
     
